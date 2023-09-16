@@ -9,7 +9,7 @@ http
       filePath = "";
 
     fs.appendFile(
-      "../log.txt",
+      "log.txt",
       "URL: " + addr + "\nTimestamp: " + new Date() + "\n\n",
       (err) => {
         if (err) {
@@ -21,9 +21,9 @@ http
     );
 
     if (q.pathname.includes("documentation")) {
-      filePath = __dirname + "./documentation.html";
+      filePath = __dirname + "/documentation.html";
     } else {
-      filePath = "./index.html";
+      filePath = "/index.html";
     }
 
     fs.readFile(filePath, (err, data) => {
