@@ -58,14 +58,16 @@ let topMovies = [
   },
 ];
 
-// setup Logging
+/* // setup Logging
 const accessLogStream = fs.createWriteStream(
   // create a write stream
   path.join(__dirname, "log.text"), //a 'log.txt' file is created in the root directory
   { flags: "a" } // path.join appends it to 'log.text'
 );
 
-app.use(morgan("combined", { stream: accessLogStream })); // enable morgan logging to 'log.txt'
+app.use(morgan("combined", { stream: accessLogStream })); // enable morgan logging to 'log.txt' */
+
+app.use(morgan("common"));
 
 // setup User Authentication
 
