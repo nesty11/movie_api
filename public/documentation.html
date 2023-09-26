@@ -13,5 +13,86 @@
     Users will be able to sign up, update their personal information, and create
     a list of their favorite movies.
   </p>
+  <table>
+    <thead>
+       <tr>
+          <th>Business Logic</th>
+          <th>URL</th>
+          <th>HTTP Method</th>
+          <th>Request Body Data Format</th>
+          <th>Response Body Data Format</th>
+       </tr>
+    </thead>
+    <tbody>
+       <tr>
+          <td>Get a list of movies</td>
+          <td>/movies</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>A JSON object holding data of a list of movies.</td>
+       </tr>
+       <tr>
+          <td>Get data about a single movie</td>
+          <td>/movies/:title</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>A JSON object holding data about a single movie.</td>
+       </tr>
+       <tr>
+        <td>Get data a movie genre.</td>
+        <td>/movies/genre/:genreName</td>
+        <td>GET</td>
+        <td>None</td>
+        <td>A JSON object holding data about a specific movie genre.</td>
+     </tr>
+     <tr>
+      <td>Get data about a specific movie director</td>
+      <td>/movies/directors/:directorName</td>
+      <td>GET</td>
+      <td>None</td>
+      <td>A JSON object holding data about a single movie director.</td>
+   </tr>
+   <tr>
+    <td>Create data for a new user.</td>
+    <td>/users</td>
+    <td>POST</td>
+    <td>A JSON object holding data about a user to add, structured as: 
+      <p>{
+        name: "Kasey",
+        favoriteMovies: [Happy Gilmore],
+      }
+      </p></td>
+    <td>A JSON object holding data about a movie, including an ID.</td>
+ </tr>
+ <tr>
+  <td>Update the user's ID.</td>
+  <td>/users/:id</td>
+  <td>PUT</td>
+  <td>None</td>
+  <td>A text message indicating an updated user ID.</td>
+</tr>
+<tr>
+  <td>Adding user's favorite movies.</td>
+  <td>/users/:id/:movieTitle</td>
+  <td>POST</td>
+  <td>None</td>
+  <td>A JSON object updating the user's favorite movies.</td>
+</tr>
+<tr>
+  <td>Deleting a user's favorite movie.</td>
+  <td>/users/:id/:movieTitle</td>
+  <td>DELETE</td>
+  <td>None</td>
+  <td>A text message indicating the user's favorite movie being deleted.</td>
+</tr>
+<tr>
+  <td>Deleting a user's ID.</td>
+  <td>/users/:id</td>
+  <td>DELETE</td>
+  <td>None</td>
+  <td>A text message indicating a user's ID being deleted.</td>
+</tr>
+    </tbody>
+ </table>
   </body>
 </html>
