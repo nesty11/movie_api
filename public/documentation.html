@@ -33,7 +33,7 @@
        </tr>
        <tr>
           <td>Get data about a single movie</td>
-          <td>/movies/:title</td>
+          <td>/movies/:Title</td>
           <td>GET</td>
           <td>None</td>
           <td>A JSON object holding data about a single movie.</td>
@@ -57,40 +57,65 @@
     <td>/users</td>
     <td>POST</td>
     <td>A JSON object holding data about a user to add, structured as: 
-      <p>{
-        name: "Kasey",
-        favoriteMovies: [Happy Gilmore],
-      }
+      <p>Users.create({
+        Name: req.body.Name,
+        Username: req.body.Username,
+        Password: req.body.Password,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday,
+      })
       </p></td>
     <td>A JSON object holding data about a movie, including an ID.</td>
  </tr>
  <tr>
-  <td>Update the user's ID.</td>
-  <td>/users/:id</td>
-  <td>PUT</td>
+  <td>Get all users.</td>
+  <td>/users</td>
+  <td>GET</td>
   <td>None</td>
-  <td>A text message indicating an updated user ID.</td>
+  <td>A JSON object holding data of a list of users.</td>
+</tr>
+<tr>
+  <td>Get a user.</td>
+  <td>/users/:Username</td>
+  <td>GET</td>
+  <td>None</td>
+  <td>A JSON object holding data of a specific user.</td>
+</tr>
+<tr>
+  <td>Update a user's info by username.</td>
+  <td>/users/:Username</td>
+  <td>PUT</td>
+  <td>A JSON object holding data about a user to add, structured as: 
+    {
+    Name: req.params.Name,
+    Username: req.body.Username,
+    Password: req.body.Password,
+    Email: req.body.Email,
+    Birthday: req.body.Birthday,
+  }
+</td>
+  <td>A JSON object holding updated data of a user.</td>
 </tr>
 <tr>
   <td>Adding user's favorite movies.</td>
-  <td>/users/:id/:movieTitle</td>
+  <td>/users/:Username/movies/:MovieID</td>
   <td>POST</td>
   <td>None</td>
   <td>A JSON object updating the user's favorite movies.</td>
 </tr>
 <tr>
   <td>Deleting a user's favorite movie.</td>
-  <td>/users/:id/:movieTitle</td>
+  <td>/users/:Username/movies/:MovieID</td>
   <td>DELETE</td>
   <td>None</td>
   <td>A text message indicating the user's favorite movie being deleted.</td>
 </tr>
 <tr>
-  <td>Deleting a user's ID.</td>
-  <td>/users/:id</td>
+  <td>Deleting a user by username.</td>
+  <td>/users/:Username</td>
   <td>DELETE</td>
   <td>None</td>
-  <td>A text message indicating a user's ID being deleted.</td>
+  <td>A text message indicating a user being deleted.</td>
 </tr>
     </tbody>
  </table>
