@@ -1,13 +1,23 @@
 // setup requirements and constants
-const express = require("express"),
-  morgan = require("morgan"),
-  bodyParser = require("body-parser"),
-  uuid = require("uuid"),
-  /* fs = require("fs"), */
-  path = require("path");
+const mongoose = require("mongoose");
+const Models = require("./models.js");
+const bodyParser = require("body-parser");
+const express = require("express");
+const morgan = require("morgan");
+const uuid = require("uuid");
+//const fs = require('fs');
+const path = require("path");
 const app = express();
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+const Movies = Models.Movie;
+const Users = Models.User;
+mongoose.connect("mongodb://127.0.0.1/cfDB", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 let users = [
   {
@@ -22,7 +32,7 @@ let users = [
   },
 ];
 
-let movies = [
+/* let movies = [
   {
     Title: "Star Wars: Revenge of the Sith",
     Year: "2005",
@@ -38,7 +48,7 @@ let movies = [
       Bio: "George Walton Lucas, Jr. (Modesto, California, May 14, 1944) is an American filmmaker, creator of the film sagas of Star Wars and Indiana Jones, and former president of Lucasfilm Limited, LucasArts Entertainment Company, Lucas Digital Ltd, Lucas Licensing, LucasBooks and Lucas Learning Ltd. It was considered, for two consecutive years, the fourth most powerful person in the entertainment industry, behind the owners of Time Warner, Turner and Steven Spielberg. Born: May 14, 1944.",
     },
     ImageURL: "",
-    Featured: "",
+    Featured: "True",
   },
 
   {
@@ -56,7 +66,7 @@ let movies = [
       Bio: "Dennis Barton Dugan is an American film director, actor, comedian and screenwriter from Wheaton, Illinois who directed several films featuring Adam Sandler including Happy Gilmore, Big Daddy, Jack & Jill, Grown Ups, I Now Pronounce You Chuck & Larry and You Don't Mess With the Zohan. He also directed Beverly Hills Ninja and The Benchwarmers. Born September 5, 1946.",
     },
     ImageURL: "",
-    Featured: "",
+    Featured: "True",
   },
 
   {
@@ -74,7 +84,7 @@ let movies = [
       Bio: "Tatsuya Nagamine (長峯 達也, Nagamine Tatsuya) is a Japanese anime director working for Toei Animation. He is known for Dragon Ball Super: Broly (2018), One Piece (1999) and One Piece Film Z (2012).",
     },
     ImageURL: "",
-    Featured: "",
+    Featured: "True",
   },
 
   {
@@ -92,7 +102,7 @@ let movies = [
       Bio: "Gorō Taniguchi (谷口 悟朗, Taniguchi Gorō, born October 18, 1966) is a Japanese anime director, writer, producer and storyboard artist, who is among Sunrise's noted directors. He was born in Nisshin, Aichi, Japan.",
     },
     ImageURL: "",
-    Featured: "",
+    Featured: "True",
   },
 
   {
@@ -110,7 +120,7 @@ let movies = [
       Bio: "Robert Persichetti Jr. (born January 17, 1973) is an American filmmaker, animator, story artist, storyboard artist, screenwriter, film director, and film producer. He is best known for co-directing the film Spider-Man: Into the Spider-Verse, for which he won the Academy Award for Best Animated Feature.",
     },
     ImageURL: "",
-    Featured: "",
+    Featured: "True",
   },
 
   {
@@ -128,7 +138,7 @@ let movies = [
       Bio: "Hayao Miyazaki is 1 of Japan's greatest animation directors. The entertaining plots, compelling characters & breathtaking animation in his films have earned him international renown from critics as well as public recognition within Japan. He was born on January 5, 1941 in Tokyo. He started his career in 1963 as an animator at the studio Toei Douga studio, and was subsequently involved in many early classics of Japanese animation. From the beginning, he commanded attention with his incredible drawing ability and the seemingly endless stream of movie ideas he proposed.",
     },
     ImageURL: "",
-    Featured: "",
+    Featured: "True",
   },
 
   {
@@ -143,10 +153,10 @@ let movies = [
     },
     Director: {
       Name: "Jon Watts",
-      Bio: "Jon Watts is an American filmmaker and screenwriter. He directed Cop Car and Clown before he was picked by Marvel and Sony to direct Spider-Man: Homecoming starring Tom Holland and Zendaya. It's success resulted in two sequels, Far from Home in 2019 and No Way Home in 2021. He was also picked by Marvel to direct a Fantastic Four reboot film following the failure of Josh Trank's Fant4stic, but dropped the directing role in April 2022. Born june 28, 1981.",
+      Bio: "Jon Watts is an American filmmaker and screenwriter. He directed Cop Car and Clown before he was picked by Marvel and Sony to direct Spider-Man: Homecoming starring Tom Holland and Zendaya. It's success resulted in two sequels, Far from Home in 2019 and No Way Home in 2021. He was also picked by Marvel to direct a Fantastic Four reboot film following the failure of Josh Trank's Fant4stic, but dropped the directing role in April 2022. Born June 28, 1981.",
     },
     ImageURL: "",
-    Featured: "",
+    Featured: "True",
   },
 
   {
@@ -164,14 +174,14 @@ let movies = [
       Bio: "Frank Coraci is an American film Director, Writer and Actor best know for his work with Adam Sandler. Coraci was born in Shirley, New York on Long Island. Coraci graduated from New York University's Tisch School of the Arts in 1988 with a bachelor's degree in Film. He has directed a number of Sandler's most revered and biggest box office hits (The Wedding Singer, The Waterboy and Click). Born February 3, 1966.",
     },
     ImageURL: "",
-    Featured: "",
+    Featured: "True",
   },
 
   {
     Title: "Star Wars: Episode I - The Phantom Menace",
     Year: "1999",
     Description:
-      "When the Trade Federation organize a blockade around the planet Naboo, the Supreme Chancellor Valorum sends the Jedi Qui-Gon Jinn and Obi-Wan Kenobi to negotiate the end of the blockade. However the evil Viceroy Nute Gunray is ordered to kill the Jedi and invade Naboo. However the Jedi escape and Qui-Gon saves the life of the clumsy Gungan Jar Jar Binks. The outcast native takes the Jedi to his submerged city and the Gungan leader gives transportation to them. The Jedi head to the capital to warn Queen Amidala about the invasion. However she has been captured by the Federation droids but the Jedi rescue the queen and her court and they flee in a spacecraft that is damaged when they cross the blockade. They land on a desert planet and Qui-Gon Jinn goes to the town with Jar Jar, the droid R2-D2 and the queen's assistant Padmé to seek the necessary part for the spacecraft. When they find the component, they do not have money to buy it. But the slave boy Anakin Skywalker offers to dispute a race with his pod to raise the necessary money. Qui-Gon feels the Force in the boy and accepts his offer.",
+      "Two Jedi escape a hostile blockade to find allies and come across a young boy who may bring balance to the Force, but the long dormant Sith resurface to claim their original glory.",
     Genre: {
       Name: "Action",
       Description:
@@ -182,7 +192,7 @@ let movies = [
       Bio: "George Walton Lucas, Jr. (Modesto, California, May 14, 1944) is an American filmmaker, creator of the film sagas of Star Wars and Indiana Jones, and former president of Lucasfilm Limited, LucasArts Entertainment Company, Lucas Digital Ltd, Lucas Licensing, LucasBooks and Lucas Learning Ltd. It was considered, for two consecutive years, the fourth most powerful person in the entertainment industry, behind the owners of Time Warner, Turner and Steven Spielberg. Born: May 14, 1944.",
     },
     ImageURL: "",
-    Featured: "",
+    Featured: "True",
   },
 
   {
@@ -200,9 +210,9 @@ let movies = [
       Bio: "John Francis Daley began acting in the national and international tour of The Who's Tommy, playing young Tommy - and coming to national prominence in the critically acclaimed, cult classic series, Freaks and Geeks (1999). Formerly a regular on the Fox hit, Bones (2005), John can also be seen in the Lions Gate comedy, Waiting and the upcoming Rapture-Palooza (2013), opposite Anna Kendrick and Craig Robinson. Now enjoying a successful screenwriting career, with his writing partner, Jonathan Goldstein, the two have sold several scripts in the past three years, including the summer hit, Horrible Bosses (2011). As well as being an actor and screenwriter, John is also a musician, playing keyboard and singing lead vocals in his band, Dayplayer soon to release their first CD.",
     },
     ImageURL: "",
-    Featured: "",
+    Featured: "True",
   },
-];
+]; */
 
 /* // setup Logging
 const accessLogStream = fs.createWriteStream(
@@ -225,17 +235,17 @@ app.use(
 );
 
 // GET requests READ
-app.get("/movies", (req, res) => {
+/* app.get("/movies", (req, res) => {
   res.status(200).json(movies);
-});
+}); */
 
 app.get("/", (req, res) => {
   res.send("Welcome to myFlix!");
 });
 
 // Listen for requests
-app.listen(8080, () => {
-  console.log("Your app is listening on port 8080.");
+app.listen(27017, () => {
+  console.log("Your app is listening on port 27017.");
 });
 
 // setup Error Handling
@@ -244,8 +254,20 @@ app.use((err, req, res, next) => {
   res.status(500).send("Oh no! Something has gone wrong. ");
 });
 
-//READ
-app.get("/movies/:title", (req, res) => {
+//GET all movies 2.7
+app.get("/movies", (req, res) => {
+  Movies.find()
+    .then((movies) => {
+      res.status(201).json(movies);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
+});
+
+//READ 2.5
+/* app.get("/movies/:title", (req, res) => {
   const { title } = req.params;
   const movie = movies.find((movie) => movie.Title === title);
 
@@ -254,10 +276,22 @@ app.get("/movies/:title", (req, res) => {
   } else {
     res.status(400).send("There is no movie with this title.");
   }
+}); */
+
+//GET movie info for one Title 2.7
+app.get("/movies/:Title", (req, res) => {
+  Movies.findOne({ Title: req.params.Title })
+    .then((movie) => {
+      res.json(movie);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
 });
 
-//READ
-app.get("/movies/genre/:genreName", (req, res) => {
+//READ 2.5
+/* app.get("/movies/genre/:genreName", (req, res) => {
   const { genreName } = req.params;
   const genre = movies.find((movie) => movie.Genre.Name === genreName).Genre;
 
@@ -266,10 +300,22 @@ app.get("/movies/genre/:genreName", (req, res) => {
   } else {
     res.status(400).send("Genre does not exist.");
   }
+}); */
+
+//GET genre info for one genre
+app.get('/movies/genres/:genreName', (req, res) => {
+  Movies.findOne({ 'Genre.Name': req.params.genreName })
+    .then((movie) => {
+      res.status(200).json(movie.Genre);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
-//READ
-app.get("/movies/directors/:directorName", (req, res) => {
+//READ 2.5
+/* app.get("/movies/directors/:directorName", (req, res) => {
   const { directorName } = req.params;
   const director = movies.find(
     (movie) => movie.Director.Name === directorName
@@ -280,10 +326,22 @@ app.get("/movies/directors/:directorName", (req, res) => {
   } else {
     res.status(400).send("There is no director with this name.");
   }
+}); */
+
+//GET info for one director
+app.get('/movies/directors/:directorName', (req, res) => {
+  Movies.findOne({ 'Director.Name': req.params.directorName })
+    .then((movie) => {
+      res.json(movie.Director);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
-//Create
-app.post("/users", (req, res) => {
+//Create 2.5
+/* app.post("/users", (req, res) => {
   const newUser = req.body;
 
   if (newUser.name) {
@@ -293,10 +351,105 @@ app.post("/users", (req, res) => {
   } else {
     res.status(400).send("Username needed.");
   }
+}); */
+
+//CREATE a new user 2.7
+app.post("/users", async (req, res) => {
+  await Users.findOne({ Username: req.body.Username })
+    .then((user) => {
+      if (user) {
+        return res.status(400).send(req.body.Username + "already exists");
+      } else {
+        Users.create({
+          Name: req.body.Name,
+          Username: req.body.Username,
+          Password: req.body.Password,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday,
+        })
+          .then((user) => {
+            res.status(201).json(user);
+          })
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send("Error:" + error);
+          });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("Error:" + error);
+    });
 });
 
-//UPDATE
-app.put("/users/:id", (req, res) => {
+// Get all users 2.7
+app.get("/users", async (req, res) => {
+  await Users.find()
+    .then((users) => {
+      res.status(201).json(users);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error:" + err);
+    });
+});
+
+//Get a user by username 2.7
+app.get("/users/:Username", async (req, res) => {
+  await Users.findOne({ Username: req.params.Username })
+    .then((user) => {
+      res.json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error:" + err);
+    });
+});
+
+// Update a user's info by username 2.7
+app.put("/users/:Username", async (req, res) => {
+  await Users.findOneAndUpdate(
+    { Username: req.params.Username },
+    {
+      $set: {
+        Name: req.params.Name,
+        Username: req.body.Username,
+        Password: req.body.Password,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday,
+      },
+    },
+    { new: true }
+  ) //This line makes sure that the updated document is returned
+    .then((updatedUser) => {
+      res.json(updatedUser);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error:" + err);
+    });
+}); 
+
+//Add a movie to a user's list of favorites 2.7
+app.post("/users/:Username/movies/:MovieID", async (req, res) => {
+  await Users.findOneAndUpdate(
+    { Username: req.params.Username },
+    {
+      $push: { FavoriteMovies: req.params.MovieID },
+    },
+    { new: true }
+  ) //This line makes sure that the updated document is returned
+    .then((updatedUser) => {
+      res.json(updatedUser);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error:" + err);
+    });
+});
+
+//UPDATE 2.5
+/* app.put("/users/:id", (req, res) => {
   const { id } = req.params;
   const updatedUser = req.body;
 
@@ -308,10 +461,10 @@ app.put("/users/:id", (req, res) => {
   } else {
     res.status(400).send("There is no user with this ID.");
   }
-});
+}); */
 
-//POST
-app.post("/users/:id/:movieTitle", (req, res) => {
+//POST 2.5
+/* app.post("/users/:id/:movieTitle", (req, res) => {
   const { id, movieTitle } = req.params;
 
   let user = users.find((user) => user.id == id);
@@ -322,10 +475,10 @@ app.post("/users/:id/:movieTitle", (req, res) => {
   } else {
     res.status(400).send("There is no user with this ID.");
   }
-});
+}); */
 
-//DELETE
-app.delete("/users/:id/:movieTitle", (req, res) => {
+//DELETE 2.5
+/* app.delete("/users/:id/:movieTitle", (req, res) => {
   const { id, movieTitle } = req.params;
 
   let user = users.find((user) => user.id == id);
@@ -341,9 +494,26 @@ app.delete("/users/:id/:movieTitle", (req, res) => {
     res.status(400).send("There is no user with this ID.");
   }
 });
+ */
 
-//DELETE
-app.delete("/users/:id", (req, res) => {
+//DELETE a user's favorite movie 2.7
+app.delete('/users/:Username/movies/:MovieID', (req, res) => {
+  Users.findOneAndUpdate(
+    { Username: req.params.Username },
+    { $pull: { FavoriteMovies: req.params.MovieID } },
+    { new: true }
+  )
+    .then(updatedUser => {
+      res.json(updatedUser);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+//DELETE 2.5
+/* app.delete("/users/:id", (req, res) => {
   const { id } = req.params;
 
   let user = users.find((user) => user.id == id);
@@ -355,4 +525,20 @@ app.delete("/users/:id", (req, res) => {
   } else {
     res.status(400).send("There is no user with this ID.");
   }
+}); */
+
+//DELETE a user by username 2.7
+app.delete("/users/:Username", async (req, res) => {
+  await Users.findOneAndRemove({ Username: req.params.Username })
+    .then((user) => {
+      if (!user) {
+        res.status(400).send(req.params.Username + " was not found.");
+      } else {
+        res.status(200).send(req.params.Username + " was deleted.");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
 });
