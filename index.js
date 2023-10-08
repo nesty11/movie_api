@@ -4,9 +4,6 @@ const Models = require("./models.js");
 const bodyParser = require("body-parser");
 const express = require("express");
 const morgan = require("morgan");
-const uuid = require("uuid");
-//const fs = require('fs');
-const path = require("path");
 const app = express();
 
 app.use(bodyParser.json());
@@ -18,19 +15,6 @@ mongoose.connect("mongodb://127.0.0.1/cfDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
-let users = [
-  {
-    id: 1,
-    name: "Kim",
-    favoriteMovies: ["Star Wars: Revenge of the Sith"],
-  },
-  {
-    id: 2,
-    name: "Joe",
-    favoriteMovies: ["One Piece Film: Red"],
-  },
-];
 
 /* let movies = [
   {
