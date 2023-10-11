@@ -9,17 +9,16 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-let auth = require('./auth')(app);
-
-const passport = require('passport');
-require('./passport');
-
 const Movies = Models.Movie;
 const Users = Models.User;
 mongoose.connect("mongodb://127.0.0.1/cfDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
+let auth = require("./auth")(app);
+const passport = require("passport");
+require("./passport");
 
 /* let movies = [
   {
@@ -244,16 +243,20 @@ app.use((err, req, res, next) => {
 });
 
 //GET all movies 2.7
-app.get("/movies", passport.authenticate('jwt', {session: false}), async (req, res) => {
-  await Movies.find()
-    .then((movies) => {
-      res.status(201).json(movies);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send("Error: " + err);
-    });
-});
+app.get(
+  "/movies",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    await Movies.find()
+      .then((movies) => {
+        res.status(201).json(movies);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      });
+  }
+);
 
 //READ 2.5
 /* app.get("/movies/:title", (req, res) => {
@@ -292,14 +295,14 @@ app.get("/movies/:Title", (req, res) => {
 }); */
 
 //GET genre info for one genre
-app.get('/movies/genres/:genreName', (req, res) => {
-  Movies.findOne({ 'Genre.Name': req.params.genreName })
+app.get("/movies/genres/:genreName", (req, res) => {
+  Movies.findOne({ "Genre.Name": req.params.genreName })
     .then((movie) => {
       res.status(200).json(movie.Genre);
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send('Error: ' + err);
+      res.status(500).send("Error: " + err);
     });
 });
 
@@ -318,14 +321,14 @@ app.get('/movies/genres/:genreName', (req, res) => {
 }); */
 
 //GET info for one director
-app.get('/movies/directors/:directorName', (req, res) => {
-  Movies.findOne({ 'Director.Name': req.params.directorName })
+app.get("/movies/directors/:directorName", (req, res) => {
+  Movies.findOne({ "Director.Name": req.params.directorName })
     .then((movie) => {
       res.json(movie.Director);
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send('Error: ' + err);
+      res.status(500).send("Error: " + err);
     });
 });
 
@@ -385,7 +388,7 @@ app.get("/users", async (req, res) => {
 
 //Get a user by username 2.7
 app.get("/users/:Username", (req, res) => {
-   Users.findOne({ Username: req.params.Username })
+  Users.findOne({ Username: req.params.Username })
     .then((user) => {
       res.json(user);
     })
@@ -396,32 +399,38 @@ app.get("/users/:Username", (req, res) => {
 });
 
 // Update a user's info by username 2.7
-app.put("/users/:Username",  (req, res) => {
-   Users.findOneAndUpdate(
-    { Username: req.params.Username },
-    {
-      $set: {
-        Name: req.params.Name,
-        Username: req.body.Username,
-        Password: req.body.Password,
-        Email: req.body.Email,
-        Birthday: req.body.Birthday,
+app.put(
+  "/users/:username",
+  passport.authenticate("jwt", { session: false }),
+  async (request, response) => {
+    //Condition to check Username
+    if (request.user.username !== request.params.username) {
+      return response.status(400).send("permission denied");
+    }
+    await Users.findOneAndUpdate(
+      { username: request.params.username },
+      {
+        $set: {
+          username: request.body.username,
+          password: request.body.password,
+          email: request.body.email,
+          birthday: request.body.birthday,
+        },
       },
-    },
-    { new: true }
-  ) //This line makes sure that the updated document is returned
-    .then((updatedUser) => {
-      res.json(updatedUser);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send("Error:" + err);
+      { new: true }
+    ).then((user) => {
+      if (!user) {
+        response.status(500).send(`${request.params.username} not found`);
+      } else {
+        response.status(201).json(user);
+      }
     });
-}); 
+  }
+);
 
 //Add a movie to a user's list of favorites 2.7
-app.post("/users/:Username/movies/:MovieID",  (req, res) => {
-   Users.findOneAndUpdate(
+app.post("/users/:Username/movies/:MovieID", (req, res) => {
+  Users.findOneAndUpdate(
     { Username: req.params.Username },
     {
       $push: { FavoriteMovies: req.params.MovieID },
@@ -486,18 +495,18 @@ app.post("/users/:Username/movies/:MovieID",  (req, res) => {
  */
 
 //DELETE a user's favorite movie 2.7
-app.delete('/users/:Username/movies/:MovieID', (req, res) => {
+app.delete("/users/:Username/movies/:MovieID", (req, res) => {
   Users.findOneAndUpdate(
     { Username: req.params.Username },
     { $pull: { FavoriteMovies: req.params.MovieID } },
     { new: true }
   )
-    .then(updatedUser => {
+    .then((updatedUser) => {
       res.json(updatedUser);
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
-      res.status(500).send('Error: ' + err);
+      res.status(500).send("Error: " + err);
     });
 });
 
