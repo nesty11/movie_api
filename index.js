@@ -233,8 +233,8 @@ app.get("/", (req, res) => {
 });
 
 // Listen for requests
-app.listen(27017, () => {
-  console.log("Your app is listening on port 27017.");
+app.listen(8080, () => {
+  console.log("Your app is listening on port 8080.");
 });
 
 // setup Error Handling
@@ -343,11 +343,11 @@ app.get('/movies/directors/:directorName', (req, res) => {
 }); */
 
 //CREATE a new user 2.7
-app.post("/users", async (req, res) => {
-  await Users.findOne({ Username: req.body.Username })
+app.post("/users", (req, res) => {
+  Users.findOne({ Username: req.body.Username })
     .then((user) => {
       if (user) {
-        return res.status(400).send(req.body.Username + "already exists");
+        return res.status(400).send(req.body.Username + " already exists");
       } else {
         Users.create({
           Name: req.body.Name,
