@@ -379,8 +379,8 @@ app.get("/users", async (req, res) => {
 });
 
 //Get a user by username 2.7
-app.get("/users/:Username", async (req, res) => {
-  await Users.findOne({ Username: req.params.Username })
+app.get("/users/:Username", (req, res) => {
+   Users.findOne({ Username: req.params.Username })
     .then((user) => {
       res.json(user);
     })
@@ -391,8 +391,8 @@ app.get("/users/:Username", async (req, res) => {
 });
 
 // Update a user's info by username 2.7
-app.put("/users/:Username", async (req, res) => {
-  await Users.findOneAndUpdate(
+app.put("/users/:Username",  (req, res) => {
+   Users.findOneAndUpdate(
     { Username: req.params.Username },
     {
       $set: {
@@ -415,8 +415,8 @@ app.put("/users/:Username", async (req, res) => {
 }); 
 
 //Add a movie to a user's list of favorites 2.7
-app.post("/users/:Username/movies/:MovieID", async (req, res) => {
-  await Users.findOneAndUpdate(
+app.post("/users/:Username/movies/:MovieID",  (req, res) => {
+   Users.findOneAndUpdate(
     { Username: req.params.Username },
     {
       $push: { FavoriteMovies: req.params.MovieID },
