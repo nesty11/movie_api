@@ -1,5 +1,5 @@
 const passport = require("passport"),
-  LocalStrategy = require("passport-local").LocalStrategy,
+  LocalStrategy = require("passport-local").Strategy,
   Models = require("./models.js"),
   passportJWT = require("passport-jwt");
 
@@ -42,8 +42,8 @@ passport.use(
       jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
       secretOrKey: "your_jwt_secret",
     },
-    async (jwtPayLoad, callback) => {
-      return await Users.findById(jwtPayLoad._id)
+    async (jwtPayload, callback) => {
+      return await Users.findById(jwtPayload._id)
         .then((user) => {
           return callback(null, user);
         })
