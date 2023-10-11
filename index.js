@@ -9,6 +9,11 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+let auth = require('./auth')(app);
+
+const passport = require('passport');
+require('./passport');
+
 const Movies = Models.Movie;
 const Users = Models.User;
 mongoose.connect("mongodb://127.0.0.1/cfDB", {
