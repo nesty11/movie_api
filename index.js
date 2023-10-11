@@ -244,8 +244,8 @@ app.use((err, req, res, next) => {
 });
 
 //GET all movies 2.7
-app.get("/movies", (req, res) => {
-  Movies.find()
+app.get("/movies", passport.authenticate('jwt', {session: false}), async (req, res) => {
+  await Movies.find()
     .then((movies) => {
       res.status(201).json(movies);
     })
