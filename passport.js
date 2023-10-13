@@ -23,6 +23,10 @@ passport.use(
               message: "Incorrect username or password.",
             });
           }
+          if (!user.validatePassword(password)){
+            console.log("Password is incorrect.");
+            return callback(null, flase, {message: "Password is incorrect."});
+          }
           console.log("finished");
           return callback(null, user);
         })

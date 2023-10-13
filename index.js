@@ -16,6 +16,19 @@ mongoose.connect("mongodb://127.0.0.1/cfDB", {
   useUnifiedTopology: true,
 });
 
+const cors = require('cors');
+let alloweedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+app.use(cors({
+  origin: (origin, callback) => {
+    if(!origin) return callback(null, true);
+    if(alloweedOrigins.indexOf(origin) === -1) {//If a specific origin isn't found on the list of allowed origins
+    let message = "The CORS policy for this application doesn't allow acces from origin" + origin;
+  return callback(new Error(message ), false);
+}
+return callback(null, true);
+  }
+}));
+
 let auth = require("./auth")(app);
 const passport = require("passport");
 require("./passport");
@@ -358,10 +371,12 @@ app.get(
 }); */
 
 //CREATE a new user 2.7 (Does not need authentication so new users can register)
-app.post("/users", (req, res) => {
-  Users.findOne({ Username: req.body.Username })
+app.post("/users", async (req, res) => {
+  let hashedPassword = Users.hashPassword(req.body.Password);
+  await Users.findOne({ Username: req.body.Username }) //Searches to see if a user with the requested username already exists
     .then((user) => {
       if (user) {
+        //If the user is found, send a response that it already exists
         return res.status(400).send(req.body.Username + " already exists");
       } else {
         Users.create({
