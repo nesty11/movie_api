@@ -12,10 +12,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const Movies = Models.Movie;
 const Users = Models.User;
-/* mongoose.connect("mongodb://127.0.0.1/cfDB", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}); */
 
 mongoose.connect(
   "process.env.CONNECTION_URI",
