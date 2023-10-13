@@ -12,10 +12,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const Movies = Models.Movie;
 const Users = Models.User;
-mongoose.connect("mongodb://127.0.0.1/cfDB", {
+/* mongoose.connect("mongodb://127.0.0.1/cfDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});
+}); */
+
+mongoose.connect(
+  "process.env.CONNECTION_URI",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
 
 const cors = require("cors");
 let alloweedOrigins = ["http://localhost:8080", "http://testsite.com"];
