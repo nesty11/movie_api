@@ -13,13 +13,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect(
-  "process.env.CONNECTION_URI",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-);
+mongoose.connect(process.env.CONNECTION_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 const cors = require("cors");
 let allowedOrigins = ["http://localhost:8080", "http://testsite.com"];
@@ -43,8 +40,6 @@ let auth = require("./auth")(app);
 const passport = require("passport");
 require("./passport");
 
-
-
 /* // setup Logging
 const accessLogStream = fs.createWriteStream(
   // create a write stream
@@ -64,7 +59,6 @@ app.use(morgan("common"));
 app.use(
   express.static("public") // routes all requests for static files to the 'public' folder
 );
-
 
 app.get("/", (req, res) => {
   res.send("Welcome to myFlix!");
