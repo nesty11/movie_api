@@ -24,7 +24,7 @@ app.use(
   cors({
     origin: (origin, callback) => {
       if (!origin) return callback(null, true);
-      if (alloweedOrigins.indexOf(origin) === -1) {
+      if (allowedOrigins.indexOf(origin) === -1) {
         //If a specific origin isn't found on the list of allowed origins
         let message =
           "The CORS policy for this application doesn't allow acces from origin" +
@@ -66,7 +66,7 @@ app.get("/", (req, res) => {
 
 const port = process.env.PORT || 8080;
 app.listen(port, "0.0.0.0", () => {
-  console.log("Listening on Port" + port);
+  console.log("Listening on Port " + port);
 });
 
 // setup Error Handling
