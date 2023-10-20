@@ -14,9 +14,10 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 mongoose.connect(process.env.CONNECTION_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
 
 const cors = require("cors");
 let allowedOrigins = ["http://localhost:8080", "http://testsite.com"];
@@ -62,17 +63,6 @@ app.use(
 
 app.get("/", (req, res) => {
   res.send("Welcome to myFlix!");
-});
-
-const port = process.env.PORT || 8080;
-app.listen(port, "0.0.0.0", () => {
-  console.log("Listening on Port " + port);
-});
-
-// setup Error Handling
-app.use((err, req, res, next) => {
-  console.error(err.stack); // information about the error will be logged to the terminal, then logged in the console
-  res.status(500).send("Oh no! Something has gone wrong. ");
 });
 
 //GET all movies 2.7
@@ -149,7 +139,7 @@ app.post(
     check("Username", "Username is required").isLength({ min: 5 }),
     check("Username", "Username contains invalid characters.").isAlphanumeric(),
     check("Password", "Password is required").not().isEmpty(),
-    check("Email", "Email does not appear to be valid").isEmail,
+    check("Email", "Email does not appear to be valid").isEmail(),
   ],
   async (req, res) => {
     //Check the validation object for error
@@ -312,3 +302,13 @@ app.delete(
       });
   }
 );
+const port = process.env.PORT || 8080;
+app.listen(port, "0.0.0.0", () => {
+  console.log("Listening on Port " + port);
+});
+
+// setup Error Handling
+app.use((err, req, res, next) => {
+  console.error(err.stack); // information about the error will be logged to the terminal, then logged in the console
+  res.status(500).send("Oh no! Something has gone wrong. ");
+});
