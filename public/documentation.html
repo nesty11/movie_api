@@ -13,7 +13,7 @@
     Users will be able to sign up, update their personal information, and create
     a list of their favorite movies.
   </p>
-  <table>
+  <table border="1">
     <thead>
        <tr>
           <th>Business Logic</th>
@@ -57,14 +57,14 @@
     <td>/users</td>
     <td>POST</td>
     <td>A JSON object holding data about a user to add, structured as: 
-      <p>Users.create({
-        Name: req.body.Name,
-        Username: req.body.Username,
-        Password: req.body.Password,
-        Email: req.body.Email,
-        Birthday: req.body.Birthday,
+      <br>Users.create({
+        <br>Name: req.body.Name,
+        <br>Username: req.body.Username,
+        <br>Password: req.body.Password,
+        <br>Email: req.body.Email,
+        <br>Birthday: req.body.Birthday,
       })
-      </p></td>
+      </td>
     <td>A JSON object holding data about a movie, including an ID.</td>
  </tr>
  <tr>
@@ -86,12 +86,11 @@
   <td>/users/:Username</td>
   <td>PUT</td>
   <td>A JSON object holding data about a user to add, structured as: 
-    {
-    Name: req.params.Name,
-    Username: req.body.Username,
-    Password: req.body.Password,
-    Email: req.body.Email,
-    Birthday: req.body.Birthday,
+    <br>{Name: req.body.Name,
+      <br>Username: req.body.Username,
+      <br>Password: req.body.Password,
+      <br>Email: req.body.Email,
+      <br>Birthday: req.body.Birthday,
   }
 </td>
   <td>A JSON object holding updated data of a user.</td>
