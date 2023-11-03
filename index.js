@@ -14,13 +14,16 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 mongoose.connect(process.env.CONNECTION_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-);
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 const cors = require("cors");
-let allowedOrigins = ["http://localhost:8080", "http://testsite.com", "http://localhost:1234"];
+let allowedOrigins = [
+  "http://localhost:8080",
+  "http://testsite.com",
+  "http://localhost:1234",
+];
 app.use(
   cors({
     origin: (origin, callback) => {
