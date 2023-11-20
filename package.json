@@ -22,18 +22,17 @@
     "express-validator": "^7.0.1",
     "git": "^0.1.5",
     "jsonwebtoken": "^9.0.2",
-    "mime": "^2.0.3",
-    "mongodb": "^6.1.0",
-    "mongoose": "^7.6.0",
+    "mongodb": "^6.3.0",
+    "mongoose": "^7.6.5",
     "morgan": "^1.10.0",
-    "npm": "^10.2.0",
+    "npm": "^10.2.4",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "eslint": "^8.49.0",
+    "eslint": "^8.54.0",
     "nodemon": "^3.0.1"
   }
 }
