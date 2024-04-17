@@ -25,6 +25,7 @@ let allowedOrigins = [
   "http://localhost:1234",
   "https://nvflixapp.netlify.app",
   "http://localhost:4200",
+  "https://nesty11.github.io/myFlix-Angular-App/welcome",
 ];
 app.use(
   cors({
