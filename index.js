@@ -41,6 +41,7 @@ mongoose.connect(process.env.CONNECTION_URI, {
 const cors = require("cors");
 let allowedOrigins = [
   "http://localhost:8080",
+  "http://localhost:80",
   "http://testsite.com",
   "http://localhost:1234",
   "https://nvflixapp.netlify.app",
