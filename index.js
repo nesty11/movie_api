@@ -52,24 +52,24 @@ let allowedOrigins = [
 ];
 app.use(
   cors({
-    /**
-     * Check if the origin is allowed
-     * @param {string} origin - The origin of the request
-     * @param {function} callback - The callback function
-     */
     origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) === -1) {
-        //If a specific origin isn't found on the list of allowed origins
-        let message =
-          "The CORS policy for this application doesn't allow acces from origin" +
-          origin;
+      if (!origin) return callback(null, true); // For non-browser requests
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        let message = `The CORS policy for this application doesn't allow access from the origin ${origin}`;
         return callback(new Error(message), false);
       }
-      return callback(null, true);
     },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
+
+// Handle preflight requests
+app.options('*', cors());
+
+app.use(express.json());
 
 let auth = require("./auth")(app);
 const passport = require("passport");
