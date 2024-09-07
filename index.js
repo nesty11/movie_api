@@ -45,10 +45,22 @@ mongoose.connect(process.env.CONNECTION_URI, {
 });
 
 app.use(cors({
-  origin: 'http://final-static-bucket.s3-website-us-east-1.amazonaws.com',
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'http://final-static-bucket.s3-website-us-east-1.amazonaws.com',
+      'http://final-static-bucket.s3-website-us-east-1.amazonaws.com/signup',
+      'http://final-static-bucket.s3-website-us-east-1.amazonaws.com/login',
+
+    ];
+    if (allowedOrigins.indexOf(origin) === -1) {
+      return callback(new Error('Not allowed by CORS'), false);
+    }
+    return callback(null, true);
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
 
 // Handle preflight requests
 app.options('*', cors());
