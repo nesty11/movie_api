@@ -6,8 +6,14 @@ const Models = require("./models.js");
 const bodyParser = require("body-parser");
 const express = require("express");
 const morgan = require("morgan");
-const app = express();
+const cors = require("cors");
 const { check, validationResult } = require("express-validator");
+const passport = require("passport");
+const moviesRoutes = require("./routes/movies"); // Import movie routes
+const usersRoutes = require("./routes/users");   // Import user routes
+require("./passport"); // Import passport configuration
+
+const app = express();
 
 /**
  * Middleware for parsing JSON requests
@@ -50,9 +56,9 @@ app.options('*', cors());
 // Define your routes
 app.use('/movies', moviesRoutes);
 app.use('/users', usersRoutes);
-let auth = require("./auth")(app);
-const passport = require("passport");
-require("./passport");
+
+let auth = require("./auth")(app); // Import authentication setup
+
 /**
  * Middleware for logging requests
  * @method
@@ -60,23 +66,8 @@ require("./passport");
  * @param {Object} res - Express response object
  * @param {Function} next - Next middleware function
  */
-
-/* // setup Logging
-const accessLogStream = fs.createWriteStream(
-  // create a write stream
-  path.join(__dirname, "log.text"), //a 'log.txt' file is created in the root directory
-  { flags: "a" } // path.join appends it to 'log.text'
-);
-
-app.use(morgan("combined", { stream: accessLogStream })); // enable morgan logging to 'log.txt' */
-
 app.use(morgan("common"));
 
-// setup User Authentication
-
-// setup JSON Parsing
-
-// setup App Routing
 /**
  * Serve static files from the 'public' folder
  * @method
@@ -84,9 +75,7 @@ app.use(morgan("common"));
  * @param {Object} res - Express response object
  * @param {Function} next - Next middleware function
  */
-app.use(
-  express.static("public") // routes all requests for static files to the 'public' folder
-);
+app.use(express.static("public"));
 
 /**
  * Route for the home page
@@ -197,9 +186,6 @@ app.get(
  */
 app.post(
   "/users",
-  // Validation logic here for request
-  //you can either use a chain of methods like .not().isEmpty()
-  //or use .isLength({min: 5}) which means: minimum value of 5 characters are only allowed
   [
     check("Username", "Username is required").isLength({ min: 5 }),
     check("Username", "Username contains invalid characters.").isAlphanumeric(),
@@ -207,7 +193,6 @@ app.post(
     check("Email", "Email does not appear to be valid").isEmail(),
   ],
   async (req, res) => {
-    //Check the validation object for error
     let errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -215,10 +200,9 @@ app.post(
     }
 
     let hashedPassword = Users.hashPassword(req.body.Password);
-    await Users.findOne({ Username: req.body.Username }) //Searches to see if a user with the requested username already exists
+    await Users.findOne({ Username: req.body.Username })
       .then((user) => {
         if (user) {
-          //If the user is found, send a response that it already exists
           return res.status(400).send(req.body.Username + " already exists");
         } else {
           Users.create({
@@ -301,7 +285,6 @@ app.put(
   "/users/:Username",
   passport.authenticate("jwt", { session: false }),
   async (request, response) => {
-    //Condition to check Username
     if (request.user.Username !== request.params.Username) {
       return response.status(400).send("Request denied.");
     }
@@ -345,7 +328,7 @@ app.post(
         $push: { FavoriteMovies: req.params.MovieID },
       },
       { new: true }
-    ) //This line makes sure that the updated document is returned
+    )
       .then((updatedUser) => {
         res.json(updatedUser);
       })
@@ -420,7 +403,6 @@ app.listen(port, "0.0.0.0", () => {
   console.log("Listening on Port " + port);
 });
 
-// setup Error Handling
 /**
  * Middleware for error handling
  * @param {Error} err - Error object
@@ -429,6 +411,6 @@ app.listen(port, "0.0.0.0", () => {
  * @param {Function} next - Next middleware function
  */
 app.use((err, req, res, next) => {
-  console.error(err.stack); // information about the error will be logged to the terminal, then logged in the console
-  res.status(500).send("Oh no! Something has gone wrong. ");
+  console.error(err.stack); // Log error details
+  res.status(500).send("Oh no! Something has gone wrong.");
 });
