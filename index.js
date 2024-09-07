@@ -48,7 +48,7 @@ let allowedOrigins = [
   "http://localhost:4200",
   "https://nesty11.github.io/myFlix-Angular-App/welcome",
   "https://nesty11.github.io",
-  "https://final-static-bucket.s3.amazonaws.com",
+  "https://final-static-bucket.s3-website-us-east-1.amazonaws.com/",
 ];
 app.use(
   cors({
