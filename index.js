@@ -38,44 +38,18 @@ mongoose.connect(process.env.CONNECTION_URI, {
   useUnifiedTopology: true,
 });
 
-const cors = require("cors");
-let allowedOrigins = [
-  /*  "http://localhost:8080",
-   "http://localhost:80",
-   "http://testsite.com",
-   "http://localhost:1234",
-   "https://nvflixapp.netlify.app",
-   "http://localhost:4200",
-   "https://nesty11.github.io/myFlix-Angular-App/welcome",
-   "https://nesty11.github.io",
-   "https://final-static-bucket.s3-website-us-east-1.amazonaws.com/",
-   "https://movieapi-2cmo.onrender.com" */
-  "*"
-];
-/* app.use(
-  cors({ */
-/**
- * Check if the origin is allowed
- * @param {string} origin - The origin of the request
- * @param {function} callback - The callback function
- */
-/*  origin: (origin, callback) => {
-   if (!origin) return callback(null, true);
-   if (allowedOrigins.indexOf(origin) === -1) {
-     //If a specific origin isn't found on the list of allowed origins
-     let message =
-       "The CORS policy for this application doesn't allow acces from origin" +
-       origin;
-     return callback(new Error(message), false);
-   }
-   return callback(null, true);
- },
-})
-); */
 app.use(cors({
   origin: '*', // Allow all origins
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
+// Handle preflight requests
+app.options('*', cors());
+
+// Define your routes
+app.use('/movies', moviesRoutes);
+app.use('/users', usersRoutes);
 let auth = require("./auth")(app);
 const passport = require("passport");
 require("./passport");
