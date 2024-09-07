@@ -45,7 +45,7 @@ mongoose.connect(process.env.CONNECTION_URI, {
 });
 
 app.use(cors({
-  origin: '*', // Allow all origins
+  origin: 'http://final-static-bucket.s3-website-us-east-1.amazonaws.com',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
