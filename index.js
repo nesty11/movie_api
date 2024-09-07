@@ -49,6 +49,7 @@ let allowedOrigins = [
   "https://nesty11.github.io/myFlix-Angular-App/welcome",
   "https://nesty11.github.io",
   "https://final-static-bucket.s3-website-us-east-1.amazonaws.com/",
+  "https://movieapi-2cmo.onrender.com/login",
 ];
 app.use(
   cors({
